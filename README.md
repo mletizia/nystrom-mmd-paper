@@ -3,7 +3,7 @@
 This repository contains the official implementation for the paper:
 
 **A. Chatalic, M. Letizia, N. Schreuder, L. Rosasco**  
-*An Efficient Permutation-Based Kernel Two-Sample Test*  
+*A Scalable Nyström-Based Kernel Two-Sample Test with Permutations*  
 [arXiv:2502.13570](https://arxiv.org/abs/2502.13570)
 
 ---
