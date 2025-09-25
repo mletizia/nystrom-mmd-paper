@@ -4,7 +4,7 @@ import argparse
 from datetime import datetime
 
 # Import custom utilities for Nyström permutation test, kernel parameter estimation, and dataset sampling
-from tests import rMMDtest, MMDb_test, NysMMDtest, MMDb_test_fast
+from tests import rMMDtest, NysMMDtest, MMDbtest
 from samplers import sample_higgs_susy_dataset, read_data_susy
 from utils import list_num_features, check_if_seeds_exist, median_pairwise
 
@@ -106,7 +106,7 @@ def main():
             # Perform full-rank permutation test if specified
             if "fullrank" in which_tests:
                 print("Fullrank test")
-                output_full[test, :] = MMDb_test_fast(X, bw=sigmahat, seed=test_seed, alpha=0.05, B=199, plot=False)
+                output_full[test, :] = MMDbtest(X, bw=sigmahat, seed=test_seed, alpha=0.05, B=199, plot=False)
 
             # Perform uniform Nyström-based permutation test if specified
             if "uniform" in which_tests:

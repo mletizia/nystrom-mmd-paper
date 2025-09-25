@@ -4,7 +4,7 @@ import argparse
 from datetime import datetime
 
 # Import custom utilities for Nyström permutation test, kernel parameter estimation, and dataset sampling
-from tests import rMMDtest, MMDb_test, NysMMDtest
+from tests import rMMDtest, NysMMDtest, MMDbtest
 from samplers import generate_correlated_gaussians
 from utils import check_if_seeds_exist, standardize_data, median_pairwise
 
@@ -17,7 +17,7 @@ def main():
 
     # Required named arguments
     parser.add_argument('--output_folder', type=str, default="./results", help='Folder where to store results. Default "./results".')   
-    parser.add_argument('--tests', nargs='+', type=str, default=["uniform", "rlss", "rff"], help='Input tests as a list.')    
+    parser.add_argument('--tests', nargs='+', type=str, default=["uniform", "rlss", "rff"], help='Input tests as a list. For example: fullrank uniform rlss rff')    
     parser.add_argument('--alpha', default=0.05 , type=float, help='Level of the test')
     parser.add_argument('--B', default=199 , type=int, help='Number of permutations')
     parser.add_argument('--N', default=400 , type=int, help='Number of repetitions')
@@ -107,7 +107,7 @@ def main():
             # Perform full-rank permutation test if specified
             if "fullrank" in which_tests:
                 print("Fullrank test")
-                output_full[test, :] = MMDb_test(X, sigmahat, seed=None, B=B, plot=False)
+                output_full[test, :] = MMDbtest(X, bw=sigmahat, seed=test_seed, B=B, plot=False)
 
             # Perform uniform Nyström-based permutation test if specified
             if "uniform" in which_tests:

@@ -26,7 +26,7 @@ from tqdm import tqdm
 # ----------------------------
 # Permutation test
 # ----------------------------
-def MMDb_test_fast(Z: np.ndarray,
+def MMDbtest(Z: np.ndarray,
               bw: float,
               seed: int = None,
               alpha: float = 0.05,
@@ -86,54 +86,54 @@ def MMDb_test_fast(Z: np.ndarray,
     return output, dt, ntot
 
 
-def MMDb_test(Z, bw, seed=None, alpha=0.05, B=199, plot=False):
-    """
-    Performs the MMD (Maximum Mean Discrepancy) permutation test.
+# def MMDb_test(Z, bw, seed=None, alpha=0.05, B=199, plot=False):
+#     """
+#     Performs the MMD (Maximum Mean Discrepancy) permutation test.
     
-    Parameters:
-        Z (array): Feature matrix of shape (2n, d).
-        bw (float): Bandwidth parameter for the kernel.
-        seed (int, optional): Random seed for reproducibility.
-        alpha (float): Significance level for the test.
-        B (int): Number of permutations.
-        plot (bool): Whether to plot the distribution of permuted statistics.
+#     Parameters:
+#         Z (array): Feature matrix of shape (2n, d).
+#         bw (float): Bandwidth parameter for the kernel.
+#         seed (int, optional): Random seed for reproducibility.
+#         alpha (float): Significance level for the test.
+#         B (int): Number of permutations.
+#         plot (bool): Whether to plot the distribution of permuted statistics.
 
-    Returns:
-        output (int): 1 if null hypothesis is rejected, 0 otherwise.
-        dt (float): Computation time in seconds.
-        ntot (int): Total number of samples.
-    """
-    start = time.time()  # Start computation timer
-    rng = np.random.default_rng(seed)  # Random number generator
+#     Returns:
+#         output (int): 1 if null hypothesis is rejected, 0 otherwise.
+#         dt (float): Computation time in seconds.
+#         ntot (int): Total number of samples.
+#     """
+#     start = time.time()  # Start computation timer
+#     rng = np.random.default_rng(seed)  # Random number generator
 
-    ntot, d = Z.shape  # Total number of samples and feature dimension
-    n = int(ntot / 2)  # Sample size per group
+#     ntot, d = Z.shape  # Total number of samples and feature dimension
+#     n = int(ntot / 2)  # Sample size per group
 
-    # Compute observed test statistic
-    t_obs = MMD2b(Z[:n], Z[n:], bw)
+#     # Compute observed test statistic
+#     t_obs = MMD2b(Z[:n], Z[n:], bw)
 
-    # Generate permuted test statistics
-    H0 = np.empty(B + 1)
-    for i in tqdm(range(B)):
-        Z_perm = rng.permutation(Z)  # Permute data
-        H0[i] = MMD2b(Z_perm[:n], Z_perm[n:], bw)
+#     # Generate permuted test statistics
+#     H0 = np.empty(B + 1)
+#     for i in tqdm(range(B)):
+#         Z_perm = rng.permutation(Z)  # Permute data
+#         H0[i] = MMD2b(Z_perm[:n], Z_perm[n:], bw)
     
-    # Add observed test statistic to permutation distribution
-    H0[-1] = t_obs
+#     # Add observed test statistic to permutation distribution
+#     H0[-1] = t_obs
 
-    # Compute test decision and threshold
-    output, thr = decide(H0, t_obs, B, alpha)
+#     # Compute test decision and threshold
+#     output, thr = decide(H0, t_obs, B, alpha)
 
-    # Plot histogram if requested
-    if plot:
-        values, bins, patches = plt.hist(H0, label=r"$H_0$")
-        plt.vlines(thr, 0, max(values) * 0.8, color='red', label=f"{alpha}-level threshold")
-        plt.vlines(t_obs, 0, max(values) * 0.8, color='black', label="Observed test statistic")
-        plt.legend()
-        plt.show()
+#     # Plot histogram if requested
+#     if plot:
+#         values, bins, patches = plt.hist(H0, label=r"$H_0$")
+#         plt.vlines(thr, 0, max(values) * 0.8, color='red', label=f"{alpha}-level threshold")
+#         plt.vlines(t_obs, 0, max(values) * 0.8, color='black', label="Observed test statistic")
+#         plt.legend()
+#         plt.show()
 
-    dt = time.time() - start  # Compute total execution time
-    return output, dt, ntot
+#     dt = time.time() - start  # Compute total execution time
+#     return output, dt, ntot
 
 def rMMDtest(Z, seed=None, bandwidth=1, alpha=0.05, kernel='gaussian', R=20, B=199):
     """
