@@ -6,47 +6,6 @@ from scipy.spatial.distance import pdist
 import re, ast
 from pathlib import Path
 
-
-
-def train_test_split(Z, ratio):
-    """
-    Splits a (n, d) NumPy array Z into training and testing sets.
-    It assumes samples of equal size.
-    
-    Parameters:
-        Z (np.ndarray): Input data of shape (n, d) where the first half of the rows
-                        belong to class 0 and the second half belong to class 1.
-        ratio (float): A value between 0 and 0.5 indicating the proportion of the total
-                       dataset to include in the training set (balanced across classes).
-    
-    Returns:
-        Z_train (np.ndarray): Training data with 2*n_train_each datapoints,
-                              with the first n_train_each rows from class 0 and the next
-                              n_train_each rows from class 1.
-        Z_test (np.ndarray): Testing data with the remaining datapoints, maintaining
-                             the order (class 0 first, class 1 next).
-    """
-    n, d = Z.shape
-    nx = n // 2
-    # Number of training samples per class.
-    nx_train = int(nx * ratio)
-    nx_test = nx - nx_train
-
-    # Pre-allocate arrays for efficiency.
-    X_train = np.empty((2 * nx_train, d), dtype=Z.dtype)
-    X_test = np.empty((2 * nx_test, d), dtype=Z.dtype)
-
-    
-    # Copy training data:
-    X_train[:nx_train] = Z[:nx_train]               # Class 0 training samples.
-    X_train[nx_train:] = Z[nx:nx + nx_train]   # Class 1 training samples.
-    
-    # Copy testing data:
-    X_test[:nx_test] = Z[nx_train:nx]             # Class 0 test samples.
-    X_test[nx_test:] = Z[nx + nx_train:]           # Class 1 test samples.
-    
-    return X_train, X_test
-
 # Function to estimate the width of the Gaussian kernel using pairwise distances
 def median_pairwise(data):
     # this function estimates the width of the gaussian kernel.
@@ -99,6 +58,16 @@ def list_num_features(n):
 
     # Combine all numbers into a single sorted list
     result = np.concatenate((before_sqrt, [sqrt_n], [2*sqrt_n], [5*sqrt_n], [10*sqrt_n]))
+
+    return result
+
+# Function to generate a list of feature counts based on the square root of n
+def list_num_features_fast(n):
+    # Calculate sqrt(n)
+    sqrt_n = int(np.sqrt(n))
+
+    # Combine all numbers into a single sorted list
+    result = np.concatenate(([sqrt_n//2], [sqrt_n], [2*sqrt_n], [5*sqrt_n]))
 
     return result
 

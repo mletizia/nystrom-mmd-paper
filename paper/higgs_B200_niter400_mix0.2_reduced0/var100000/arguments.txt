@@ -1,8 +1,8 @@
 output_folder: ./results
-tests: ['uniform', 'rlss', 'rff']
 alpha: 0.05
 B: 199
 N: 400
 n: [50000]
 mix: 0.2
 reduced: 0
+compression: [0, 1, 2, 3, 4]
