@@ -6,7 +6,7 @@ from datetime import datetime
 # Import custom utilities for Nyström permutation test, kernel parameter estimation, and dataset sampling
 from tests import rMMDtest, NysMMDtest, MMDbtest
 from samplers import sample_higgs_susy_dataset, read_data_higgs
-from utils import list_num_features, check_if_seeds_exist, median_pairwise, list_num_features_fast
+from utils import list_num_features, check_if_seeds_exist, median_pairwise
 
 # Define constant for scaling
 SQRT_2 = np.sqrt(2)
@@ -64,7 +64,7 @@ def main():
     # Iterate over different sample sizes
     for n in sample_sizes:
         ntot = 2 * n
-        if K_input==None: K = list_num_features_fast(ntot)
+        if K_input==None: K = list_num_features(ntot)
         else: K = K_input
         print(f"Num. of features {K}")
 
