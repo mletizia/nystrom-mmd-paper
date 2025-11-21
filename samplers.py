@@ -54,8 +54,8 @@ def read_data_higgs(file_name, reduced=0):
     reduced : int, optional
         Option to reduce the feature space:
         - 0: No reduction (default).
-        - 1: Reduce to a subset of features.
-        - 2: Further reduce to a smaller subset.
+        - 1: Reduce to a subset of features (jet phis).
+        - 2: Further reduce to a smaller subset (first two jet phis).
     
     Returns
     -------

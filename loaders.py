@@ -1,13 +1,11 @@
 from glob import glob
 import numpy as np
-from utils import extract_var_fromstring, return_parameters
+from utils import extract_var_fromstring
 
 
 
 # Similar function to load results, but specific for 'CG' data
 def load_results(folder, methods=['uniform','rff','rlss', 'ctt']):
-
-    config = return_parameters(folder)
 
     results_dict = {}
 
@@ -19,7 +17,6 @@ def load_results(folder, methods=['uniform','rff','rlss', 'ctt']):
             print(files)
             files = sorted(files, key=extract_var_fromstring)  # Sort based on var parameter in filename
             results = [np.load(el) for el in files]
-            sorted_vars = [extract_var_fromstring(file) for file in files]
 
             # Calculate average time, power, and number of features for each result
             time_pow_nfeat = np.asarray([(el[:,1].mean(axis=0), el[:,0].mean(axis=0), el[:,2].mean(axis=0)) for el in results])
@@ -32,7 +29,6 @@ def load_results(folder, methods=['uniform','rff','rlss', 'ctt']):
                 print(files)
                 files = sorted(files, key=extract_var_fromstring)  # Sort based on var parameter in filename
                 results = [np.load(el) for el in files]
-                sorted_vars = [extract_var_fromstring(file) for file in files]
 
                 # Calculate average time, power, and number of features for each result
                 time_pow_nfeat = np.asarray([(el[:,1].mean(axis=0), el[:,0].mean(axis=0), el[:,2].mean(axis=0)) for el in results])
@@ -45,7 +41,6 @@ def load_results(folder, methods=['uniform','rff','rlss', 'ctt']):
             print(files)
             files = sorted(files, key=extract_var_fromstring)  # Sort based on var parameter in filename
             results = [np.load(el) for el in files]
-            sorted_vars = [extract_var_fromstring(file) for file in files]
 
             # Calculate average time, power, and number of features for each result
             time_pow_nfeat = np.asarray([(el[:,:,1].mean(axis=0), el[:,:,0].mean(axis=0), el[:,:,2].mean(axis=0)) for el in results])
@@ -57,4 +52,4 @@ def load_results(folder, methods=['uniform','rff','rlss', 'ctt']):
         # file_0_path = Path(files[0]) # read config from first file (they are all the same)
         # config = read_config_if_exists(file_0_path.parts[0]+'/'+file_0_path.parts[1]+'/'+'arguments.txt')
 
-    return results_dict, config, sorted_vars
+    return results_dict

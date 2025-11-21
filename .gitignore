@@ -1,6 +1,8 @@
 results/
 results_split/
 
+old/
+
 single_test.ipynb
 
 # Byte-compiled / optimized / DLL files

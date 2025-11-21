@@ -1,5 +1,5 @@
 import numpy as np
-import os
+import os, json
 import argparse
 from datetime import datetime
 
@@ -31,6 +31,7 @@ def main():
 
     # Output folder
     of = args.output_folder
+    os.makedirs(of, exist_ok=False)
 
     # Specify which tests to perform
     which_tests = args.tests  # Test types to run
@@ -51,11 +52,19 @@ def main():
     # Define feature list
     K = args.K
 
+    # save parameters
+    params = vars(args)
+    json_path = os.path.join(of, "params.json")
+    with open(json_path, "w") as f:
+        json.dump(params, f, indent=4)
+ 
+
     print("CG experiments")  # Log the start of experiments
 
     # Print all arguments
     for arg, value in vars(args).items():
         print(f"{arg}: {value}")
+    print(f"Saved parameters to {json_path}")
 
     # Iterate over different correlation values
     for rho2 in RHO2:
@@ -67,11 +76,6 @@ def main():
         # Define output folder for storing results
         output_folder = of+"/"+str(datetime.now().date())+f'/cg_ntot{ntot}_B{B+1}_niter{n_tests}/var{rho2}'
         os.makedirs(output_folder, exist_ok=True)  # Create the output folder if it does not exist
-
-        # # Save all arguments to a file
-        # with open(output_folder + '/arguments.txt', 'w') as file:
-        #     for arg, value in vars(args).items():
-        #         file.write(f"{arg}: {value}\n")
 
         # Initialize arrays to store test results for each method
         if "fullrank" in which_tests:
@@ -107,25 +111,25 @@ def main():
             # Perform full-rank permutation test if specified
             if "fullrank" in which_tests:
                 print("Fullrank test")
-                output_full[test, :] = MMDbtest(X, bw=sigmahat, seed=test_seed, B=B, plot=False)
+                output_full[test, :] = MMDbtest(X, n, n, bw=sigmahat, seed=test_seed, B=B, plot=False)
 
             # Perform uniform Nyström-based permutation test if specified
             if "uniform" in which_tests:
                 print("Uniform test")
                 for i, k in enumerate(K):
-                    output_uni[test, i, :] = NysMMDtest(X, seed=test_seed, bandwidth=sigmahat, alpha=0.05, method='uniform', k=k, B=B)
+                    output_uni[test, i, :] = NysMMDtest(X, n, n, seed=test_seed, bandwidth=sigmahat, alpha=0.05, method='uniform', k=k, B=B)
 
             # Perform recursive LSS Nyström-based permutation test if specified
             if "rlss" in which_tests:
                 print("RLSS test")
                 for i, k in enumerate(K):
-                    output_rlss[test, i, :] = NysMMDtest(X, seed=test_seed, bandwidth=sigmahat, alpha=0.05, method='rlss', k=k, B=B)
+                    output_rlss[test, i, :] = NysMMDtest(X, n, n, seed=test_seed, bandwidth=sigmahat, alpha=0.05, method='rlss', k=k, B=B)
 
             # Perform Random Fourier Features-based test if specified
             if "rff" in which_tests:
                 print("RFF test")
                 for i, k in enumerate(K):
-                    output_rff[test, i, :] = rMMDtest(X, seed=test_seed, bandwidth=SQRT_2 * sigmahat, alpha=alpha, R=k, B=B)
+                    output_rff[test, i, :] = rMMDtest(X, n, n, seed=test_seed, bandwidth=SQRT_2 * sigmahat, alpha=alpha, R=k, B=B)
 
         # Save results for each test type to the corresponding subdirectory
         if "fullrank" in which_tests:

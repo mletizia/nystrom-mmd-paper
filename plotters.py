@@ -424,7 +424,7 @@ def plot_powervsvars_exactv2(results, vars, config, nys_feat=4, ctt_feat=4, lege
             powers[method] = np.asarray([power_interval(el, niter) for el in results[method][:,1]])
 
             if config["dataset"]=='cg':
-                idx = [0,3,5]
+                idx = [0]
                 fullrank_vars = np.array(vars)[idx]
 
                 print(powers[method][:, 0])
